@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_server
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Passw0rd
+      MYSQL_DATABASE: jsh_erp
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+
+  redis:
+    image: redis:6.2
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass 1234abcd
+
+  backend:
+    build: 
+      context: ./jshERP-boot
+      dockerfile: Dockerfile
+    container_name: erp_backend
+    ports:
+      - 3500:9999
+    depends_on:
+      - mysql
+
+  ui:
+    build: 
+      context: ./jshERP-web
+      dockerfile: Dockerfile
+    container_name: erp_ui
+    ports:
+      - 3400:80
+    depends_on:
+      - backend
