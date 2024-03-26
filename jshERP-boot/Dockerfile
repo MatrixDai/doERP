@@ -5,7 +5,7 @@ COPY . /app
 RUN mvn clean package
 
 # Stage 2: Run the application
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jdk
 EXPOSE 9999
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["sleep", "15000", "java","-jar","/app.jar"]
+ENTRYPOINT sleep 15 && java -jar /app.jar

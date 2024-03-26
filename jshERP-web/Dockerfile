@@ -1,6 +1,8 @@
 # Use an official Node runtime as the base image
 FROM node:lts-alpine as build-stage
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 # Set the working directory in the container to /app
 WORKDIR /app
 
@@ -21,6 +23,7 @@ FROM nginx:stable-alpine as production-stage
 
 # Copy the build output to replace the default nginx contents
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
